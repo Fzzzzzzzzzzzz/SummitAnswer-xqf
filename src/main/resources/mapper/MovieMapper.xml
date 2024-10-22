@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xqf.mapper.MovieMapper">
+
+    <resultMap id="BaseResultMap" type="com.xqf.domain.Movie">
+            <id property="movieId" column="movie_id" jdbcType="INTEGER"/>
+            <result property="movieName" column="movie_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        movie_id,movie_name
+    </sql>
+</mapper>

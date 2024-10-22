@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xqf.mapper.CommentMapper">
+
+    <resultMap id="BaseResultMap" type="com.xqf.domain.Comment">
+            <id property="commentId" column="comment_id" jdbcType="INTEGER"/>
+            <result property="movieId" column="movie_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+            <result property="comment" column="comment" jdbcType="VARCHAR"/>
+            <result property="commentTime" column="comment_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        comment_id,movie_id,user_id,
+        parent_id,comment,comment_time
+    </sql>
+    <update id="likedCountUp">
+        UPDATE `comment`
+        SET liked = liked + 1
+        WHERE comment_id =#{comment_id};
+    </update>
+    <update id="likedCountDown">
+        UPDATE `comment`
+        SET liked = liked - 1
+        WHERE comment_id =#{comment_id};
+    </update>
+
+<!--    //这个是测试例子-->
+<!--    <resultMap id="CommentMap" type="com.xqf.domain.Comment">-->
+<!--        <id property="commentId" column="comment_id" jdbcType="INTEGER"></id>-->
+<!--        <result property="movieId" column="movie_id" jdbcType="INTEGER"></result>-->
+<!--        <result property="comment" column="comment" jdbcType="VARCHAR"></result>-->
+<!--        <collection property="subList"  ofType="com.xqf.domain.Comment">-->
+<!--            <id property="commentId" column="c2Id"></id>-->
+<!--            <result property="movieId" column="c2movieId"></result>-->
+<!--            <result property="parentId" column="c2parentId"></result>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+<!--    <select id="test" resultMap="CommentMap">-->
+<!--        SELECT c1.`comment_id`,c1.`movie_id`,c1.`comment`,-->
+<!--                c2.`comment_id` c2Id, c2.`movie_id` c2movieId,c2.`parent_id` c2parentId-->
+<!--        FROM `comment` c1-->
+<!--                 LEFT JOIN `comment` c2-->
+<!--                           ON c1.`comment_id`=c2.`parent_id`-->
+<!--        where c1.parent_id = 0 ;-->
+<!--    </select>-->
+
+    <resultMap id="CommentMap" type="com.xqf.domain.Comment">
+        <id property="commentId" column="comment_id" jdbcType="INTEGER"></id>
+        <result property="movieId" column="movie_id" jdbcType="INTEGER"></result>
+        <result property="comment" column="comment" jdbcType="VARCHAR"></result>
+        <collection property="subList"  ofType="com.xqf.domain.Comment">
+            <id property="commentId" column="c2Id"></id>
+            <result property="movieId" column="c2movieId"></result>
+            <result property="parentId" column="c2parentId"></result>
+        </collection>
+    </resultMap>
+    <select id="getCommentTree2" resultMap="CommentMap">
+        SELECT c1.`comment_id`,c1.`movie_id`,c1.`comment`,
+               c2.`comment_id` c2Id, c2.`movie_id` c2movieId,c2.`parent_id` c2parentId
+        FROM `comment` c1
+                 LEFT JOIN `comment` c2
+                           ON c1.`comment_id`=c2.`parent_id`
+        where c1.parent_id = 0 AND c1.movie_id=#{movie_id};
+    </select>
+
+</mapper>
